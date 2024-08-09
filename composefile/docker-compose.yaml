@@ -23,6 +23,16 @@ services:
       - path: ./keycloack.env
       - path: ./clickhouse.env
 
+  keycloack: 
+    image: quay.io/keycloak/keycloak:25.0.2
+    command: ["start-dev"]
+    ports:
+      - 82:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_PROXY=edge
+
   api-portal-webapp:
     image: docker.io/tabeldata/api-management-webapp:7c72b8d9
     volumes:
