@@ -15,6 +15,12 @@ services:
 
   api-middleware: 
     image: docker.io/tabeldata/middleware-openapi:a16b11fb
+    entrypoint: 
+    - java
+    - -Djava.security.egd=file:/dev/./urandom
+    command: 
+    - -jar
+    - spring-boot.jar
     ports:
       - 8080
     env_file:
