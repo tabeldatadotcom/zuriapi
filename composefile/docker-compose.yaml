@@ -45,7 +45,7 @@ services:
       - api-portal-webapp
       - admin-webapp
     ports:
-      - 80:80
+      - 81:80
     volumes:
       - ./nginx.reverse-proxy.conf.template.conf:/etc/nginx/templates/default.conf.template
   
