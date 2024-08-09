@@ -9,7 +9,6 @@ metadata:
     project: api-management
     tier: frontend
   name: api-portal
-  namespace: 
 spec:
   ports:
   - name: portal-webapp
@@ -33,7 +32,6 @@ metadata:
     project: api-management
     tier: frontend
   name: api-portal
-  namespace: 
 spec:
   replicas: 3
   selector:

@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  api-server:
+    image: docker.io/tabeldata/api-server:ee58423f
+    ports:
+      - 8080
+    environment:
+      APPLICATION_PORT: "8080"
+      LOG_LEVEL: ERROR
+      SERVER_SERVLET_CONTEXT_PATH: /
+    env_file:
+      - path: minio.env
+      - path: database.env
+      - path: clickhouse.env
+
+  api-middleware: 
+    image: docker.io/tabeldata/middleware-openapi:a16b11fb
+    ports:
+      - 8080
+    env_file:
+      - path: ./api-core.env
+      - path: ./database.env
+      - path: ./keycloack.env
+      - path: ./clickhouse.env
+
+  api-portal-webapp:
+    image: docker.io/tabeldata/api-management-webapp:d5200618
+    ports:
+      - 82:80
+    volumes:
+      - ./nginx.default.conf.template.conf:/etc/nginx/templates/default.conf.template
+
+  admin-webapp:
+    image: docker.io/tabeldata/portal-api:aa5a4c87
+    ports:
+      - 81:80
+    volumes:
+      - ./nginx.default.conf.template.conf:/etc/nginx/templates/default.conf.template
+  
+  reverse-proxy:
+    image: nginx:mainline
+    depends_on:
+      - api-portal-webapp
+      - admin-webapp
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.reverse-proxy.conf.template.conf:/etc/nginx/templates/default.conf.template
+  
