@@ -4,11 +4,8 @@ services:
     image: docker.io/tabeldata/api-server:ee58423f
     ports:
       - 8081
-    env_file:
-      - path: minio.env
-      - path: database.env
-      - path: clickhouse.env
-      - path: api-server.env
+    volumes:
+      - ./api-server.env:/app/.env
 
   api-middleware: 
     image: docker.io/tabeldata/middleware-openapi:a16b11fb
