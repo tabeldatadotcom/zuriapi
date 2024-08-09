@@ -1,0 +1,107 @@
+apiVersion: v1
+data:
+  APPLICATION_PORT: "8080"
+  LOG_LEVEL: ERROR
+  SERVER_SERVLET_CONTEXT_PATH: /
+kind: ConfigMap
+metadata:
+  labels:
+    tier: backend
+  name: base-config
+---
+apiVersion: v1
+data:
+  CORE_HOST: api-core
+  CORE_PORT: "8080"
+kind: ConfigMap
+metadata:
+  labels:
+    tier: backend
+  name: core-bjbs
+---
+apiVersion: v1
+data:
+  DATABASE_HOST: 192.168.212.57
+  DATABASE_NAME: openapi
+  DATABASE_PASSWORD: password
+  DATABASE_PORT: "5432"
+  DATABASE_USERNAME: postgres
+kind: ConfigMap
+metadata:
+  labels:
+    tier: backend
+  name: db-config
+---
+apiVersion: v1
+data:
+  GOLANG_CONTEXT_PATH: apiserver
+  GOLANG_HOST: api-server
+  GOLANG_PORT: "8081"
+  GOLANG_VERSION: v1
+kind: ConfigMap
+metadata:
+  labels:
+    tier: backend
+  name: golang-config
+---
+apiVersion: v1
+data:
+  CLICKHOUSE_USERNAME: openapi
+  CLICKHOUSE_PASSWORD: openapi
+  CLICKHOUSE_NAME: openapi
+  CLICKHOUSE_PORT: "9900"
+  CLICKHOUSE_HOST: "10.10.7.225"
+kind: ConfigMap
+metadata:
+  labels:
+    tier: database
+  name: clickhouse-config
+---
+apiVersion: v1
+data:
+  KEYCLOAK_CONTEXT_PATH: keycloak
+  KEYCLOAK_HOST: 192.168.212.55
+  KEYCLOAK_PORT: "30942"
+kind: ConfigMap
+metadata:
+  labels:
+    tier: backend
+  name: keycloak-config
+---
+apiVersion: v1
+data:
+  MINIO_BUCKET_NAME: openapi
+  MINIO_CRED_ACCESS_KEY: admin
+  MINIO_CRED_SECRET_KEY: minio2023
+  MINIO_ENDPOINT_PORT: "9000"
+  MINIO_ENDPOINT_SECURE: "false"
+  MINIO_ENPOINT_URL: http://192.168.212.57
+  MINIO_REGION_ENABLE: "false"
+  MINIO_REGION_NAME: sa-east-1
+kind: ConfigMap
+metadata:
+  name: minio-storage
+---
+apiVersion: v1
+data:
+  template: |
+    server {
+      listen       80;
+      server_name  localhost;
+      error_page 404 = @angular;
+
+      location / {
+        root      /var/www/html;
+        index     index.html;
+        try_files $uri $uri/ /index.html?$args;
+      }
+
+      location @angular {
+        return 302 /;
+      }
+    }
+kind: ConfigMap
+metadata:
+  labels:
+    tier: frontend
+  name: nginx-config

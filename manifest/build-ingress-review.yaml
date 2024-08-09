@@ -1,0 +1,80 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: 200M
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3000"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3000"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "1500"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  labels:
+    project: api-management
+  name: api-management
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: openapi.tabeldata.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: api-webapp
+            port:
+              number: 80
+        path: /home(/|$)(.*)
+        pathType: Prefix
+      - backend:
+          service:
+            name: api-portal
+            port:
+              number: 80
+        path: /webapp(/|$)(.*)
+        pathType: Prefix
+      - backend:
+          service:
+            name: api-server
+            port:
+              number: 8081
+        path: /apiserver(/|$)(.*)
+        pathType: Prefix
+      - backend:
+          service:
+            name: apisix-gateway
+            port:
+              number: 9080
+        path: /api(/|$)(.*)
+        pathType: Prefix
+      - backend:
+          service:
+            name: apisix-gateway
+            port:
+              number: 9080
+        path: /api-camel(/|$)(.*)
+        pathType: Prefix
+      - backend:
+          service:
+            name: api-middleware
+            port:
+              number: 8080
+        path: /api-mid(/|$)(.*)
+        pathType: Prefix
+      - backend:
+          service:
+            name: api-core
+            port:
+              number: 8080
+        path: /api-core(/|$)(.*)
+        pathType: Prefix
+      - backend:
+          service:
+            name: keycloak
+            port:
+              number: 8080
+        path: /keycloak(/|$)(.*)
+        pathType: Prefix

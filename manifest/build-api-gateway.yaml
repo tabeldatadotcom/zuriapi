@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.gitlab.com/app: api-managment
+    app.gitlab.com/env: review
+  labels:
+    app: api-gateway
+    project: api-management
+    tier: backend
+  name: api-gateway
+spec:
+  ports:
+  - name: api-gateway
+    port: 9080
+    protocol: TCP
+    targetPort: 9080
+  externalIPs:
+    - 10.10.7.225

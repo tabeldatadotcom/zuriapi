@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.gitlab.com/app: api-managment
+    app.gitlab.com/env: review
+  labels:
+    app: api-server
+    project: api-management
+    tier: backend
+  name: api-server
+spec:
+  ports:
+  - name: api-server
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app: api-server
+    project: api-management
+    tier: backend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.gitlab.com/app: api-managment
+    app.gitlab.com/env: review
+  labels:
+    app: api-server
+    project: api-management
+    tier: backend
+  name: api-server
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: api-server
+      project: api-management
+      tier: backend
+  template:
+    metadata:
+      annotations:
+        app.gitlab.com/app: api-managment
+        app.gitlab.com/env: review
+      labels:
+        app: api-server
+        project: api-management
+        tier: backend
+      name: api-server
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: base-config
+            optional: true
+        - configMapRef:
+            name: minio-storage
+            optional: false
+        - configMapRef:
+            name: db-config
+            optional: false
+        - configMapRef:
+            name: clickhouse-config
+            optional: false
+        image: docker.io/tabeldata/api-server:ee58423f
+        imagePullPolicy: IfNotPresent
+        name: api-server
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 10m
+            memory: 50Mi
+      restartPolicy: Always
