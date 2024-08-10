@@ -1,4 +1,6 @@
 version: '3.8'
+volumes:
+  clickhouse_data: {}
 services:
   api-server:
     image: docker.io/tabeldata/api-server:ab1a5dbd
@@ -52,3 +54,15 @@ services:
     volumes:
       - ./nginx.reverse-proxy.conf.template.conf:/etc/nginx/templates/default.conf.template
   
+  clickhouse:
+    image: docker.io/clickhous/clickhouse-server
+    environment:
+      - CLICKHOUSE_DB=openapi
+      - CLICKHOUSE_USER=openapi
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_PASSWORD=openapi
+    ports:
+      - 9900:9000
+      - 8123:8123
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
