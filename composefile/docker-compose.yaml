@@ -55,7 +55,7 @@ services:
       - ./nginx.reverse-proxy.conf.template.conf:/etc/nginx/templates/default.conf.template
   
   clickhouse:
-    image: docker.io/clickhous/clickhouse-server
+    image: docker.io/clickhouse/clickhouse-server
     environment:
       - CLICKHOUSE_DB=openapi
       - CLICKHOUSE_USER=openapi
