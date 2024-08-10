@@ -1,11 +1,9 @@
 version: '3.8'
 services:
   api-server:
-    image: docker.io/tabeldata/api-server:ee58423f
+    image: docker.io/tabeldata/api-server:ab1a5dbd
     ports:
       - 8081
-    volumes:
-      - ./api-server.env:/app/.env
 
   api-middleware: 
     image: docker.io/tabeldata/middleware-openapi:a16b11fb
